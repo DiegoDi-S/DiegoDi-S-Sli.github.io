@@ -31,7 +31,7 @@ rhino3dm().then(async m => {
     //RhinoCompute.url = "";
 
     // load a grasshopper file!
-    let url = 'BranchNodeRnd.gh';
+    let url = 'BranchNodeRnd2.gh';
     let res = await fetch(url);
     let buffer = await res.arrayBuffer();
     let arr = new Uint8Array(buffer);
@@ -52,7 +52,6 @@ function compute(){
 
     RhinoCompute.Grasshopper.evaluateDefinition(definition, trees).then(result => {
         // RhinoCompute.computeFetch("grasshopper", args).then(result => {
-        console.log('prueba.');
         console.log(result);
 
         // hide spinner
