@@ -31,7 +31,7 @@ rhino3dm().then(async m => {
     //RhinoCompute.url = "";
 
     // load a grasshopper file!
-    let url = 'BranchNodeRnd2.gh';
+    let url = 'BranchNodeRnd.gh';
     let res = await fetch(url);
     let buffer = await res.arrayBuffer();
     let arr = new Uint8Array(buffer);
