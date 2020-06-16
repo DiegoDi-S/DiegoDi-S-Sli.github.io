@@ -52,6 +52,7 @@ function compute(){
 
     RhinoCompute.Grasshopper.evaluateDefinition(definition, trees).then(result => {
         // RhinoCompute.computeFetch("grasshopper", args).then(result => {
+        console.log('prueba');
         console.log(result);
 
         // hide spinner
