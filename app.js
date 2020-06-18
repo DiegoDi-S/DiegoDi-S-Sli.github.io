@@ -28,10 +28,11 @@ rhino3dm().then(async m => {
     RhinoCompute.authToken = RhinoCompute.getAuthToken();
 
     // if you have a different Rhino.Compute server, add the URL here:
-    //RhinoCompute.url = "";
+    //RhinoCompute.url = "http://127.0.0.1:8081/";
 
     // load a grasshopper file!
-    let url = 'BranchNodeRnd2.gh';
+    //let url = 'https://diegodi-s.github.io/DiegoDi-S-Slider25.github.io/Compute_Tower_10.gh';
+    let url = 'Compute_Tower_10.gh';
     let res = await fetch(url);
     let buffer = await res.arrayBuffer();
     let arr = new Uint8Array(buffer);
@@ -60,7 +61,11 @@ function compute(){
         let data = JSON.parse(result.values[0].InnerTree['{ 0; }'][0].data);
         let mesh = rhino.CommonObject.decode(data);
 
-        let material = new THREE.MeshNormalMaterial();
+
+        //let material = new THREE.MeshNormalMaterial({ color: 0xff0000});
+
+        let material = new THREE.MeshPhongMaterial({color: 0xffffff});
+        //let material = new THREE.MeshBasicMaterial({color: 0xf5f5f5});
         let threeMesh = meshToThreejs(mesh, material);
 
         // clear meshes from scene
@@ -102,18 +107,50 @@ var scene, camera, renderer, controls;
 
 function init(){
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(1,1,1);
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 1000 );
+    //scene.background = new THREE.Color(1,1,1);
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 3000 );
+
+
+    // create a gradient background
+    var canvas = document.createElement( 'canvas' );
+    //var canvas = document.getElementById('canvas');
+    canvas.width = 128;
+    canvas.height = 128;
+    var context = canvas.getContext( '2d' );
+    var gradient = context.createLinearGradient( 0, 0, 0, canvas.height);
+    gradient.addColorStop( 0.1, 'rgba(255,255,255,1)' );
+    gradient.addColorStop( 1, 'rgba(0,0,0,1)' );
+    context.fillStyle = gradient;
+    context.fillRect( 0, 0, canvas.width, canvas.height );
+    scene.background = new THREE.CanvasTexture( canvas );
+
+    //  add a couple lights
+    var light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 0, 0, 300 );
+    scene.add( light );
+    var light2 = new THREE.DirectionalLight( 0x666666 );
+    light2.position.set( 0.2, 0.2, -300 );
+    scene.add( light2 );
+
 
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    var canvas = document.getElementById('canvas');
-    canvas.appendChild( renderer.domElement );
+    var glcanvas = document.getElementById('glcanvas');
+    glcanvas.appendChild( renderer.domElement );
 
     controls = new THREE.OrbitControls( camera, renderer.domElement  );
+    //controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+    //controls.dampingFactor = 0.25;
+    //controls.screenSpacePanning = false;
+    //controls.minDistance = 10;
+    //controls.maxDistance = 1500;
 
-    camera.position.z = 50;
+
+    camera.position.z = 250;
+    //camera.position.x = 250;
+    camera.position.y = 250;
+    //camera.target(0,0,200);
 
     window.addEventListener( 'resize', onWindowResize, false );
 
